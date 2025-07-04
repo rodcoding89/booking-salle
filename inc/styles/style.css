@@ -1,0 +1,407 @@
+a{
+    text-decoration: none;
+}
+table{
+    text-align: center;
+}
+/*stylisation du header*/
+header{
+    background-color: darkkhaki;
+    padding: 10px 0;
+}
+.header{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.teaser{
+    text-transform:uppercase;
+    margin-bottom: 40px;
+}
+
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.room-card {
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.available {
+    border-left: 5px solid #28a745;
+}
+.booked {
+    border-left: 5px solid #dc3545;
+}
+.status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.room-img {
+    height: 200px;
+    object-fit: cover;
+}
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 30px 0;
+    margin-top: 40px;
+}
+.price-highlight {
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: bold;
+}
+.slider-value {
+    font-weight: bold;
+    color: #007bff;
+}
+.banner-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.banner-img {
+    filter: brightness(0.8);
+    transition: transform 0.7s ease;
+}
+
+@media (max-width:700px){
+    .img img{
+        aspect-ratio: 9/5 !important;
+    }
+}
+
+.banner-container:hover .banner-img {
+    transform: scale(1.02);
+}
+/*INSCRIPTION*/
+ body {
+    background-color: #f8f9fa;
+}
+.registration-container {
+    min-height: 100vh;
+}
+.info-sidebar {
+    background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+    color: white;
+    padding: 3rem;
+    border-radius: 10px 0 0 10px;
+}
+.form-side {
+    background: white;
+    padding: 3rem;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+.benefit-item {
+    margin-bottom: 1.5rem;
+}
+.benefit-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    color: #fff;
+}
+.form-control:focus {
+    border-color: #3a7bd5;
+    box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+}
+.btn-primary {
+    background: linear-gradient(to right, #3a7bd5, #00d2ff);
+    border: none;
+    padding: 10px 25px;
+}
+@media (max-width: 768px) {
+    .info-sidebar, .form-side {
+        border-radius: 10px;
+    }
+    .info-sidebar {
+        border-radius: 10px 10px 0 0;
+    }
+    .form-side {
+        border-radius: 0 0 10px 10px;
+    }
+}
+/*LOGIN*/
+body {
+    background-color: #f8f9fa;
+}
+.login-container {
+    min-height: 100vh;
+}
+.info-sidebar {
+    background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+    color: white;
+    padding: 3rem;
+    border-radius: 10px 0 0 10px;
+}
+.form-side {
+    background: white;
+    padding: 3rem;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+.benefit-item {
+    margin-bottom: 1.5rem;
+}
+.benefit-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    color: #fff;
+}
+.form-control:focus {
+    border-color: #3a7bd5;
+    box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+}
+.btn-primary {
+    background: linear-gradient(to right, #3a7bd5, #00d2ff);
+    border: none;
+    padding: 10px 25px;
+}
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.social-btn i {
+    margin-right: 10px;
+}
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+}
+.divider-text {
+    padding: 0 10px;
+    color: #6c757d;
+}
+@media (max-width: 768px) {
+    .info-sidebar, .form-side {
+        border-radius: 10px;
+    }
+    .info-sidebar {
+        border-radius: 10px 10px 0 0;
+    }
+    .form-side {
+        border-radius: 0 0 10px 10px;
+    }
+}
+/*stylisation main*/
+main{
+    min-height: 500px;
+}
+
+.inscription,.connexion,.profil{
+    width: 50%;
+    margin: 30px auto;
+}
+.inscription h2,.connexion h2{
+    margin: 25px 0 50px;
+}
+.salle,.membre,.produit,.avis,.commande{
+    width: 80%;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+}
+.bloc h1{
+    text-align: center;
+    margin-top: 50px;
+}
+.content{
+    width: 80%;
+    margin: 0 auto;
+}
+.content-table{
+    margin-top: 40px;
+}
+.formulaire-inscription{
+    width: 50%;
+    margin: 40px auto 30px
+}
+.formulaire-inscription h5{
+    text-align: center;
+}
+.salle-content,.produit-content,.commande-content,.avis-content{
+    width: 80%;
+    margin: 0 auto;
+}
+.right,.left{
+    width: 45%;
+}
+.salle-content .right{
+    margin-top: -31px;
+}
+.produit-content .right{
+    margin-top: -26px;
+}
+.produit-content h6{
+    margin-top: 45px;
+}
+.salle-content form,.produit-content form,.avis-content form,.content form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+}
+.home-content,.stat-content{
+    width: 80%;
+    margin: 50px auto;
+    display: flex;
+    justify-content: space-between;
+}
+.home-content .filter{
+    width: 25%;
+}
+.categorie, .ville, .capacite,.prix,.periode{
+    margin-bottom: 25px;
+}
+.produit-item{
+    width: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.item{
+    width: 45%;
+    margin-bottom: 20px;
+}
+.item h5{
+    color: cadetblue;
+}
+.item .body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.item img{
+    width: 100%;
+    height: 155px;
+}
+.periode .arrivee{
+    margin-bottom: 30px;
+}
+.categorie ul li,.ville ul li{
+    cursor: pointer;
+}
+.resultat{
+    margin: 20px;
+}
+.reserver{
+    padding: 10px 30px;
+    background-color: darkkhaki;
+    cursor: pointer;
+}
+.part2 .photo{
+    width: 50%;
+}
+.part2 .description{
+    width: 45%;
+}
+iframe{
+    width: 100%;
+    height: 245px;
+}
+.part2 .photo img{
+    width: 100%;
+    height: 345px;
+}
+.part1,.part2,.part3,.part5,.part6,.part4{
+    width: 80%;
+    margin: 50px auto;
+    display: flex;
+    justify-content: space-between;
+}
+.part6 form{ 
+    width: 40%;
+}
+.info{
+    width: 80%;
+    margin: 0 auto;
+}
+.message{
+    width: 80%;
+    margin: 30px auto;
+}
+.part5{
+    flex-wrap: wrap;
+}
+.part5 .card{
+    width: 23%;
+    margin-bottom: 20px;
+}
+.part5 .card img{
+    width: 100%;
+    height: 155px;
+}
+.commentaire{
+    margin-bottom: 25px;
+}
+.item-list{
+    display: flex;
+    justify-content: start;
+    margin-bottom: 15px;
+}
+.left-part{
+    margin-right: 30px;
+}
+.left-part p{
+    padding: 10px 15px;
+    background-color: darkgray;
+    border-radius: 50%;
+}
+.commentaire-list{
+    width: 35%;
+}
+.historique{
+    display: flex;
+    justify-content: start;
+    margin: 20px 0;
+}
+.historique img{
+    width: 20%;
+    margin-right: 20px;
+}
+.commande-item{
+    margin-top: 30px;
+}
+.content .right{
+    margin-top: -115px;
+}
+.note{
+    width: 22%;
+}
+.map iframe{
+    height: 400px;
+}
+.contact{
+    width: 45%;
+    margin: 40px auto;
+}
+.contact h4{
+    margin-bottom: 30px;
+}
+.contact p{
+    margin-top: 30px;
+}
+.part1 span{
+    font-size: 0.6em;
+}
