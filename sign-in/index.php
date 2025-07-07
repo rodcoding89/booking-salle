@@ -1,21 +1,25 @@
 <?php
     require_once dirname(__DIR__) . '/inc/init.php';
-    $message = '';
-
+    $message= '';
+    $mdpErr= '';
+    $emailPseudoErr= '';
+    if (estConnecte()) {
+        header('location:'. RACINE_SITE.'profil');
+    }
     if (!empty($_POST)) {
-        if (empty($_POST['pseudo'])) {
-            $message .= '<div class="alert alert-danger">Veillez remplir votre champ pseudo</div>';
+        if (empty($_POST['emailPseudo'])) {
+            $emailPseudoErr .= '<div class="alert alert-danger">Veillez remplir le champ</div>';
         }
         if (empty($_POST['mdp'])) {
-            $message .= '<div class="alert alert-danger">Veillez remplir votre champ mot de passe</div>';
+            $mdpErr .= '<div class="alert alert-danger">Veillez remplir le champ</div>';
         }
-        if (!empty($_POST['pseudo']) && !empty($_POST['mdp'])) {
-            $resultat = executeRequete("SELECT * FROM membre WHERE pseudo = :pseudo",array(':pseudo' => $_POST['pseudo']));
+        if (!empty($_POST['emailPseudo']) && !empty($_POST['mdp'])) {
+            $resultat = executeRequete("SELECT * FROM membre WHERE pseudo = :emailPseudo OR email = :emailPseudo",array(':emailPseudo' => $_POST['emailPseudo']));
             if ($resultat->rowCount() > 0) {
                 $membre = $resultat->fetch(PDO::FETCH_ASSOC);
                 if (password_verify($_POST['mdp'],$membre['mdp'])) {
                     $_SESSION['membre'] = $membre;
-                    header('location:profil.php');
+                    header('location:'. RACINE_SITE.'profil');
                 }else{
                     $message = '<div class="alert alert-danger">Vos données saisies sont incorrectes</div>';
                 }
@@ -24,6 +28,8 @@
                 $message = '<div class="alert alert-danger">Vos données saisies sont incorrectes</div>';
             }
         }
+    }else{
+        $message = '<div class="alert alert-danger">Veuillez remplir les champs.</div>';
     }
     if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
         unset($_SESSION['membre']);
@@ -78,27 +84,30 @@
 
         <!-- Formulaire de connexion -->
         <div class="col-lg-5 col-md-6 form-side">
+            <?php echo $message; ?>
             <h2 class="mb-4">Connectez-vous</h2>
             <p class="mb-4">Accédez à votre espace personnel pour gérer vos réservations.</p>
 
-            <form>
+            <form action="" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Email ou pseudo</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="text" class="form-control" required>
+                        <input type="text" class="form-control" name="emailPseudo" value="<?php echo isset($_POST['emailPseudo']) ? htmlspecialchars($_POST['emailPseudo']) : ''; ?>">
                     </div>
+                    <?php echo $emailPseudoErr; ?>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Mot de passe</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" id="loginPassword" required>
+                        <input type="password" class="form-control" id="loginPassword" name="mdp" value="<?php echo isset($_POST['mdp']) ? htmlspecialchars($_POST['mdp']) : ''; ?>">
                         <button class="btn btn-outline-secondary" type="button" id="toggleLoginPassword">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
+                    <?php echo $mdpErr; ?>
                     <div class="text-end mt-2">
                         <a href="#" class="text-decoration-none">Mot de passe oublié ?</a>
                     </div>
@@ -133,21 +142,6 @@
         </div>
     </div>
 </div>
-<script>
-        // Toggle password visibility
-    document.getElementById('toggleLoginPassword').addEventListener('click', function() {
-        const passwordInput = document.getElementById('loginPassword');
-        const icon = this.querySelector('i');
-
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
-        }
-    });
-</script>
 
 
 
