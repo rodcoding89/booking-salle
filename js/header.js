@@ -10,22 +10,49 @@ if(node_env === 'dev'){
     const seg = pathname.split("/")[2];
     const catalogue = document.querySelector(".navi .catalogue a");
     const contact = document.querySelector(".navi .send-message a");
-    const login = document.querySelector("nav .sign-in a");
+    const profil = document.querySelector("nav .sign-in .proFil");
+    const backoffice = document.querySelector(".navi .backoffice a");
+    const login = document.querySelector("nav .sign-in .logIn");
+    
     if(seg === ''){
         catalogue.classList.add('active');
         contact.classList.remove('active');
         login.classList.remove('active');
+        backoffice.classList.remove('active');
+        profil.classList.remove('active');
     }else if(seg === 'sign-in' || seg === 'sign-up'){
         catalogue.classList.remove('active');
         contact.classList.remove('active');
+        if(backoffice){
+            backoffice.classList.remove('active');
+        }
         login.classList.add('active');
     }else if(seg === 'contact'){
         catalogue.classList.remove('active');
         contact.classList.add('active');
         login.classList.remove('active');
+        backoffice.classList.remove('active');
+        profil.classList.remove('active');
+    }else if(seg === 'profil'){
+        profil.classList.add('active');
+        catalogue.classList.remove('active');
+        contact.classList.remove('active');
+        if(backoffice){
+            backoffice.classList.remove('active');
+        }
+    }else if(seg === 'admin'){
+        catalogue.classList.remove('active');
+        contact.classList.remove('active');
+        if(login){
+            login.classList.remove('active');
+        }
+        if(profil){
+            profil.classList.remove('active');
+        }
+        backoffice.classList.add('active');
     }
 }else{
     
 }
 
-//console.log(seg);
+

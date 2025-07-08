@@ -15,6 +15,7 @@ CREATE TABLE `salle` (
     `ville` varchar(155) NOT NULL,
     `cp` varchar(10) NOT NULL,
     `capacite` int(11) NOT NULL,
+    `caracteristic` text NOT NULL,
     `categorie` ENUM('Formation', 'Bureau', 'Réunion') NOT NULL,
     `adresse` varchar(255) NOT NULL,
     PRIMARY KEY (`id_salle`)
@@ -50,6 +51,9 @@ CREATE TABLE `commande` (
     `id_commande` int(11) NOT NULL AUTO_INCREMENT,
     `id_membre` int(11) NOT NULL,
     `id_produit` int(11) NOT NULL,
+    `commande_ref` varchar(55) NOT NULL,
+    `commande_statut` enum('confirmed','closed','pending'),
+    `autre_options` varchar(155),
     PRIMARY KEY (`id_commande`),
     FOREIGN KEY (`id_membre`) REFERENCES `membre`(`id_membre`),
     FOREIGN KEY (`id_produit`) REFERENCES `produit`(`id_produit`)

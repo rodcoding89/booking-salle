@@ -28,8 +28,6 @@
                 $message = '<div class="alert alert-danger">Vos données saisies sont incorrectes</div>';
             }
         }
-    }else{
-        $message = '<div class="alert alert-danger">Veuillez remplir les champs.</div>';
     }
     if (isset($_GET['action']) && $_GET['action'] == 'deconnexion') {
         unset($_SESSION['membre']);

@@ -5,6 +5,7 @@
     if (!estConnecte()) {
         header('location:'. RACINE_SITE.'sign-in');
     }
+    $user = $_SESSION['membre'];
     $resultat = executeRequete("SELECT * FROM commande c INNER JOIN produit p ON c.id_produit = p.id_produit INNER JOIN salle s ON s.id_salle = p.id_salle WHERE id_membre = :id_membre",array(':id_membre' => $_SESSION['membre']['id_membre']));
     while ($commande = $resultat->fetch(PDO::FETCH_ASSOC)) {
         $contenu  = '<div class="commande-item">';
@@ -29,11 +30,11 @@
         <div class="col-lg-3 col-md-4 info-sidebar">
             <div class="text-center mb-4">
                 <div class="top mx-auto mb-3">
-                    <span>jd</span>
+                    <span><?php echo isset($user) ? substr($user['prenom'],0,1) . substr($user['nom'],0,1) : '';  ?></span>
                 </div>
-                <h3 id="profile-name">John Doe</h3>
-                <p class="mb-0"><i class="fas fa-envelope me-2"></i> <span id="profile-email">john.doe@example.com</span></p>
-                <p><i class="fas fa-user-tag me-2"></i> <span id="profile-status">Membre Standard</span></p>
+                <h3 id="profile-name"><?php echo isset($user) ? $user['nom']. ' '.$user['prenom'] : '' ?></h3>
+                <p class="mb-0"><i class="fas fa-envelope me-2"></i> <span id="profile-email"><?php echo $user['email'] ?></span></p>
+                <p><i class="fas fa-user-tag me-2"></i> <span id="profile-status"><?php echo $user['statut'] == 0 ? 'Membre Standard' : 'Administrateur'; ?></span></p>
             </div>
 
             <ul class="nav nav-pills flex-column mb-4">
@@ -73,17 +74,17 @@
                             <div class="col-md-2 mb-3 mb-md-0">
                                 <label class="form-label">Civilité</label>
                                 <select class="form-select" id="civilite" name="civilite">
-                                    <option value="m">M.</option>
-                                    <option value="f">Mme</option>
+                                    <option value="m" <?php echo (isset($user['civilite']) && $user['civilite'] == 'm') ? 'selected' : ''; ?>>M.</option>
+                                    <option value="f" <?php echo (isset($user['civilite']) && $user['civilite'] == 'f') ? 'selected' : ''; ?>>Mme</option>
                                 </select>
                             </div>
                             <div class="col-md-5 mb-3 mb-md-0">
                                 <label class="form-label">Prénom</label>
-                                <input type="text" class="form-control" id="prenom" name="prenom" value="John" required>
+                                <input type="text" class="form-control" id="prenom" name="prenom" value="<?php echo $user['nom'] ?>" required>
                             </div>
                             <div class="col-md-5">
                                 <label class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="nom" name="nom" value="Doe" required>
+                                <input type="text" class="form-control" id="nom" name="nom" value="<?php echo $user['prenom'] ?>" required>
                             </div>
                         </div>
 
@@ -91,7 +92,7 @@
                             <label class="form-label">Pseudo</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="pseudo" name="pseudo" value="johndoe" required>
+                                <input type="text" class="form-control" id="pseudo" name="pseudo" value="<?php echo $user['pseudo'] ?>" required>
                             </div>
                         </div>
 
@@ -99,18 +100,13 @@
                             <label class="form-label">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" class="form-control" id="email" name="email" value="john.doe@example.com" required>
+                                <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email'] ?>" required>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Statut</label>
-                            <input type="text" class="form-control" id="statut" name="statut" value="Membre Standard" readonly>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Photo de profil</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            <input type="text" class="form-control" id="statut" name="statut" value="<?php echo $user['statut'] == 0 ? 'Membre Standard' : 'Administrateur'; ?>" readonly>
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">

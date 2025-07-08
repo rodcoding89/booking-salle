@@ -287,6 +287,66 @@ body {
     }
 }
 
+/************************BOOKING*********************************/
+.booking-container {
+    min-width: 280px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0px auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+.info-sidebar {
+    background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+    color: white;
+    padding: 3rem;
+    border-radius: 10px 0 0 10px;
+}
+.booking-form {
+    background: white;
+    padding: 3rem;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+.room-card {
+    border-left: 4px solid #3a7bd5;
+    transition: all 0.3s;
+}
+.room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.form-control:focus {
+    border-color: #3a7bd5;
+    box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
+}
+.btn-primary {
+    background: linear-gradient(to right, #3a7bd5, #00d2ff);
+    border: none;
+}
+.price-highlight {
+    font-size: 1.25rem;
+    color: #3a7bd5;
+    font-weight: bold;
+}
+.equipment-badge {
+    background-color: #e9f5ff;
+    color: #3a7bd5;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+@media (max-width: 768px) {
+    .info-sidebar, .booking-form {
+        border-radius: 10px;
+    }
+    .info-sidebar {
+        border-radius: 10px 10px 0 0;
+    }
+    .booking-form {
+        border-radius: 0 0 10px 10px;
+    }
+}
+
 /*********************** BOOKING DETAIL *************************/
 
 .detail-container {

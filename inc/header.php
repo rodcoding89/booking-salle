@@ -36,16 +36,35 @@
                     </li>
                 </ul>
             </div>
+            
+            <?php 
+                if (estAdmin()) {
+                    echo '<li class="nav-item"><a class="nav-link backoffice" href="'.RACINE_SITE.'admin/gestion-salle.php">Backoffice</a></li>';
+                }
+                if(!estConnecte()){
+                    ?><ul class="navbar-nav d-lg-flex">
+                        <li class="nav-item sign-in">
+                            <a class="nav-link logIn" href="<?php echo RACINE_SITE . 'sign-in' ?>"><i class="fas fa-user"></i> Connexion</a>
+                        </li>
+                    </ul>
 
-            <ul class="navbar-nav d-lg-flex">
-                <li class="nav-item sign-in">
-                    <a class="nav-link" href="<?php echo RACINE_SITE . 'sign-in' ?>"><i class="fas fa-user"></i> Connexion</a>
-                </li>
-            </ul>
+                    <div class="d-lg-none sign-in">
+                        <a class="nav-link logIn" href="<?php echo RACINE_SITE . 'sign-in' ?>"><i class="fas fa-user"></i> Connexion</a>
+                    </div>
+                <?php
+                }else{
+                    ?><ul class="navbar-nav d-lg-flex">
+                        <li class="nav-item sign-in">
+                            <a class="nav-link proFil" href="<?php echo RACINE_SITE . 'profil' ?>"><i class="fas fa-user"></i> Profil</a>
+                        </li>
+                    </ul>
 
-            <div class="d-lg-none sign-in">
-                <a class="nav-link" href="<?php echo RACINE_SITE . 'sign-in' ?>"><i class="fas fa-user"></i> Connexion</a>
-            </div>
+                    <div class="d-lg-none sign-in">
+                        <a class="nav-link proFil" href="<?php echo RACINE_SITE . 'profil' ?>"><i class="fas fa-user"></i> Profil</a>
+                    </div>
+                <?php
+                }
+            ?>
         </div>
     </nav>
     <main>

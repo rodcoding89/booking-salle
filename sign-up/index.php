@@ -54,8 +54,6 @@
         }else{
             $cguError .= '<div class="alert alert-danger">Veuillez valider nos CGU et Politiques de confidentialités.</div>';
         }
-    }else{
-        $message .= '<div class="alert alert-danger">Veuillez remplir tous les champs.</div>';
     }
     //debug($_POST);
 

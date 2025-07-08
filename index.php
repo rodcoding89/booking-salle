@@ -61,7 +61,7 @@ require_once 'inc/header.php';
     </div>
 </div>
 
-<div class="container my-4 catalogue">
+<div id="bookingSale" class="container my-4 catalogue">
     <div class="row">
         <!-- Section de Filtres -->
         <div class="col-lg-3">
