@@ -34,13 +34,19 @@
                     <li class="nav-item send-message">
                         <a class="nav-link" href="<?php echo RACINE_SITE . 'contact' ?>"><i class="fas fa-envelope"></i> Nous contacter</a>
                     </li>
+                    <?php 
+                        if (estAdmin()) {
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link backoffice" href="<?php echo RACINE_SITE.'admin'; ?>"><i class="fas fa-cog me-1"></i>Backoffice</a>
+                            </li>
+                            <?php
+                        }
+                    ?>
                 </ul>
             </div>
             
             <?php 
-                if (estAdmin()) {
-                    echo '<li class="nav-item"><a class="nav-link backoffice" href="'.RACINE_SITE.'admin/gestion-salle.php">Backoffice</a></li>';
-                }
                 if(!estConnecte()){
                     ?><ul class="navbar-nav d-lg-flex">
                         <li class="nav-item sign-in">

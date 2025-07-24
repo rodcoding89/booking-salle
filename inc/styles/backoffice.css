@@ -1,0 +1,32 @@
+.backoffice{
+	width: 100%;
+    max-width: 1250px;
+    min-width: 280px;
+    padding: 20px 20px 40px;
+    margin: 0 auto;
+}
+.backoffice ul{
+	position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 950px;
+    min-width: 280px;
+    padding: 20px 20px 0;
+}
+.addForm{
+	width: 100%;
+    max-width: 950px;
+    min-width: 280px;
+    padding: 20px;
+    margin: 0 auto;
+}
+.left,.right{
+	width: 100%;
+    max-width: calc(50% - 16px);
+    min-width: 280px;
+}
+.item{
+	width: 100%;
+}

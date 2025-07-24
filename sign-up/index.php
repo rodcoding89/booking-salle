@@ -32,9 +32,9 @@
             }
 
             if (empty($errorPseudo) && empty($errorEmail) && empty($errorMdp) && empty($errorNom) && empty($errorPrenom) && empty($errorCivilite)) {
-                $resultat = executeRequete("SELECT * FROM membre WHERE pseudo = :pseudo",array(':pseudo' => $_POST['pseudo'] ));
-
-                if ($resultat->rowCount() > 0) {
+                $resultat = selectQuery("SELECT * FROM membre WHERE pseudo = :pseudo",array(':pseudo' => $_POST['pseudo'] ));
+                $users = $resultat->fetchAll(PDO::FETCH_ASSOC);
+                if (count($users) > 0) {
                     $errorPseudo = '<p class="alert alert-danger">Le pseudo est déja pris. Choisissez un autre</p>';
                 } else {
                     $encodeMdp = password_hash($_POST['mdp'], PASSWORD_DEFAULT);

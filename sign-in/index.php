@@ -6,6 +6,7 @@
     if (estConnecte()) {
         header('location:'. RACINE_SITE.'profil');
     }
+    //var_dump($_POST);
     if (!empty($_POST)) {
         if (empty($_POST['emailPseudo'])) {
             $emailPseudoErr .= '<div class="alert alert-danger">Veillez remplir le champ</div>';
@@ -14,9 +15,13 @@
             $mdpErr .= '<div class="alert alert-danger">Veillez remplir le champ</div>';
         }
         if (!empty($_POST['emailPseudo']) && !empty($_POST['mdp'])) {
-            $resultat = executeRequete("SELECT * FROM membre WHERE pseudo = :emailPseudo OR email = :emailPseudo",array(':emailPseudo' => $_POST['emailPseudo']));
-            if ($resultat->rowCount() > 0) {
-                $membre = $resultat->fetch(PDO::FETCH_ASSOC);
+            $pseudo = $_POST['emailPseudo'];
+            $email = $_POST['emailPseudo'];
+            $resultat = selectQuery("SELECT * FROM membre WHERE pseudo = :pseudo OR email = :email",array(':pseudo' => $pseudo, ":email" =>$email));
+            $users = $resultat->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($users) > 0) {
+                $membre = $users[0];
                 if (password_verify($_POST['mdp'],$membre['mdp'])) {
                     $_SESSION['membre'] = $membre;
                     header('location:'. RACINE_SITE.'profil');

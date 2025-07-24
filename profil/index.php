@@ -5,22 +5,69 @@
     if (!estConnecte()) {
         header('location:'. RACINE_SITE.'sign-in');
     }
-    $user = $_SESSION['membre'];
-    $resultat = executeRequete("SELECT * FROM commande c INNER JOIN produit p ON c.id_produit = p.id_produit INNER JOIN salle s ON s.id_salle = p.id_salle WHERE id_membre = :id_membre",array(':id_membre' => $_SESSION['membre']['id_membre']));
-    while ($commande = $resultat->fetch(PDO::FETCH_ASSOC)) {
-        $contenu  = '<div class="commande-item">';
-        $contenu .= '<h6>'.$commande['categorie'].' '.$commande['titre'].'</h6>';
-        $contenu .= '<div class="historique">';
-        $contenu .= '<img src="'.$commande['photo'].'" alt="'.$commande['titre'].'">';
-        $contenu .= '<div style="margin-right:20px;"><p>Arrivée : '.explode(" ",$commande['date_arrivee'])[0].'</p><p>Départ : '.explode(" ",$commande['date_depart'])[0].'</p></div>';
-        $contenu .= '<div><p>Adresse : '.$commande['adresse'].' '.$commande['cp'].' '.$commande['ville'].'</p><p>Capacité :'.$commande['capacite'].'</p></div>';
-        $contenu .= '</div>';
-        $contenu .= '<p>Enregistré le : '.explode(" ",$commande['date_enregistrement'])[0].'</p>';
-        $contenu .= '</div>';
+    function create_date($dateString) {
+        return new DateTime($dateString);
+    }
+    $result = selectQuery("SELECT * FROM membre WHERE id_membre =:id_membre",array(
+        "id_membre" => $_SESSION['membre']['id_membre']
+    ));
+    $user = $result->fetch(PDO::FETCH_ASSOC);
+    $resultat = executeRequete(
+    "SELECT c.*, s.* FROM commande c INNER JOIN salle s ON c.id_salle = s.id_salle WHERE c.id_membre = :id_membre",array(':id_membre' => $_SESSION['membre']['id_membre']));
+    $contenu = '';
+    while ($data = $resultat->fetch(PDO::FETCH_ASSOC)) {
+        //debuging($data);
+        $contenu .= '<div class="list-group-item reservation-card mb-3"><div class="d-flex justify-content-between"><div>';
+        $contenu .= '<h5 class="mb-1">' . $data['titre'] . '</h5>';
+        $contenu .= '<p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>' . $data['ville'] . '</p>';
+        $contenu .= '<small class="text-muted"><i class="fas fa-calendar-alt me-2"></i> ' . date_format(create_date($data['date_debut']), "j F, Y") . ' - ' . date_format(create_date($data['date_fin']), "j F, Y") . ' ' . $data['heure_debut'] . ' - ' . $data['heure_fin'] . '</small></div><div class="text-end">';
+        $contenu .= '<span class="badge status-badge badg ' . ($data['commande_statut'] == "pending" ? "bg-warning" : ($data['commande_statut'] == "confirmed" ? "bg-success" : ($data['commande_statut'] == "cancelled" ? 'bg-primary' : "bg-secondary"))) . '">' . ($data['commande_statut'] == "pending" ? "En attente" : ($data['commande_statut'] == "confirmed" ? "Confirmée" : ($data['commande_statut'] == "cancelled" ? "Annuler" : "Terminé"))) . '</span>';
+        $contenu .= '<p class="price-highlight mt-3">' . $data['prix_total'] . '€</p></div></div><div class="d-flex justify-content-end mt-2">';
+
+        if ($data['commande_statut'] == "pending" || $data['commande_statut'] == "confirmed") {
+            $contenu .= '<form method="POST" action= "'.RACINE_SITE . 'inc/reset_orders.php' .'"><input type="hidden" name="orderId" value="'.$data['id_commande'].'"><button type="submit" class="btn btn-outline-danger btn-sm me-2">Annuler</button></form><a href="' . RACINE_SITE . 'profil/booking-detail?orderId='.$data['id_commande'].'" class="btn btn-outline-primary btn-sm">Détails</a>';
+        } else {
+            $contenu .= '<a href="' . RACINE_SITE . 'profil/booking-detail?orderId='.$data["id_commande"].'" class="btn btn-outline-primary btn-sm">Détails</a>';
+        }
+
+        $contenu .= '</div></div>';
+
         //debug($commande);
     }
     //debug($_SESSION['membre']);
-
+    $errorIncorrectCPw = "";
+    $errorIncorrectPw = "";
+    if(isset($_POST)){
+        if(isset($_POST['updateUser'])){
+            $resultat = executeRequete("UPDATE membre SET nom =:nom, prenom =:prenom, email =:email, civilite =:civilite WHERE id_membre =:id_membre", array(
+                "nom" => $_POST['nom'],
+                "prenom" => $_POST['prenom'],
+                "email" => $_POST['email'],
+                "civilite" => $_POST['civilite'],
+                "id_membre" => $user['id_membre']
+            ));
+        }else if(isset($_POST['updatePw'])){
+            //var_dump($_POST);
+            if (password_verify($_POST['apw'],$user['mdp'])) {
+                if($_POST['npw'] == $_POST['cpw']){
+                    $hashedPw = password_hash($_POST['npw'], PASSWORD_DEFAULT);
+                    $query = executeRequete("UPDATE membre SET mdp = :mdp WHERE id_membre =:id_membre", array(
+                        "mdp" => $hashedPw,
+                        "id_membre" => $user['id_membre']
+                    ));
+                }else{
+                    $errorIncorrectCPw = "<div class='alert alert-danger mt-3'>Votre nouveau mot de passe ne correspond a celui de confirmation.</div>";
+                }
+            } else {
+                $errorIncorrectPw = "<div class='alert alert-danger mt-3'>Votre mot de passe actuelle ne correspond pas a celui saisi.</div>";
+            }
+            
+        }
+    }
+    if(isset($_GET) && isset($_GET['logout'])){
+        session_destroy();
+        header("Location:".RACINE_SITE);
+    }
     require_once dirname(__DIR__) . '/inc/header.php';
 ?>
 
@@ -56,9 +103,11 @@
             </ul>
 
             <div class="text-center">
-                <button class="btn btn-outline-light btn-sm">
-                    <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
-                </button>
+                <form action="" method="GET">
+                    <button type="submit" name="logout" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -69,7 +118,7 @@
                 <div class="tab-pane fade show active" id="profile-tab">
                     <h2 class="mb-4"><i class="fas fa-user-cog me-2"></i> Modifier mon profil</h2>
 
-                    <form id="profile-form">
+                    <form id="profile-form" method="POST" action="">
                         <div class="row mb-3">
                             <div class="col-md-2 mb-3 mb-md-0">
                                 <label class="form-label">Civilité</label>
@@ -92,7 +141,7 @@
                             <label class="form-label">Pseudo</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="pseudo" name="pseudo" value="<?php echo $user['pseudo'] ?>" required>
+                                <input type="text" class="form-control" id="pseudo" name="pseudo" value="<?php echo $user['pseudo'] ?>" readonly>
                             </div>
                         </div>
 
@@ -110,8 +159,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="button" class="btn btn-outline-secondary me-2">Annuler</button>
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <button type="submit" name="updateUser" class="btn btn-primary">Enregistrer</button>
                         </div>
                     </form>
                 </div>
@@ -132,62 +180,7 @@
                     </div>
 
                     <div class="list-group">
-                        <!-- Réservation 1 -->
-                        <div class="list-group-item reservation-card mb-3">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="mb-1">Salle de Réunion Lumineuse</h5>
-                                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> Paris</p>
-                                    <small class="text-muted"><i class="fas fa-calendar-alt me-2"></i> 15 juin 2023, 09:00 - 12:00</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-success status-badge">Confirmée</span>
-                                    <p class="price-highlight mt-2">120€</p>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button class="btn btn-outline-danger btn-sm me-2">Annuler</button>
-                                <a href="<?php echo RACINE_SITE .'profil/booking-detail?id=1' ?>" class="btn btn-outline-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
-
-                        <!-- Réservation 2 -->
-                        <div class="list-group-item reservation-card mb-3">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="mb-1">Bureau Privé Moderne</h5>
-                                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> Lyon</p>
-                                    <small class="text-muted"><i class="fas fa-calendar-alt me-2"></i> 20 juin 2023, 08:00 - 18:00</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-warning text-dark status-badge">En attente</span>
-                                    <p class="price-highlight mt-2">80€</p>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button class="btn btn-outline-danger btn-sm me-2">Annuler</button>
-                                <a href="<?php echo RACINE_SITE .'profil/booking-detail?id=1' ?>" class="btn btn-outline-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
-
-                        <!-- Réservation 3 -->
-                        <div class="list-group-item reservation-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="mb-1">Espace Formation Professionnel</h5>
-                                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> Marseille</p>
-                                    <small class="text-muted"><i class="fas fa-calendar-alt me-2"></i> 5 juin 2023, 10:00 - 17:00</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-secondary status-badge">Terminée</span>
-                                    <p class="price-highlight mt-2">250€</p>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button class="btn btn-outline-secondary btn-sm me-2">Archiver</button>
-                                <a href="<?php echo RACINE_SITE .'profil/booking-detail?id=1' ?>" class="btn btn-outline-primary btn-sm">Détails</a>
-                            </div>
-                        </div>
+                        <?php echo $contenu; ?>
                     </div>
                 </div>
 
@@ -195,25 +188,26 @@
                 <div class="tab-pane fade" id="security-tab">
                     <h2 class="mb-4"><i class="fas fa-lock me-2"></i> Sécurité du compte</h2>
 
-                    <form id="security-form">
+                    <form id="security-form" action="" method="POST">
                         <div class="mb-4">
                             <h5>Changer le mot de passe</h5>
                             <div class="mb-3">
                                 <label class="form-label">Mot de passe actuel</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" id="current-password" required>
+                                    <input type="password" name="apw" class="form-control" id="current-password" required value="<?php echo isset($_POST['apw']) ? $_POST['apw'] : ''; ?>">
                                     <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                <?php echo $errorIncorrectPw; ?>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Nouveau mot de passe</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" id="new-password" required>
+                                    <input type="password" name="npw" class="form-control" id="new-password" required value="<?php echo isset($_POST['npw']) ? $_POST['npw'] : ''; ?>">
                                     <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -225,15 +219,16 @@
                                 <label class="form-label">Confirmer le nouveau mot de passe</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" id="confirm-password" required>
+                                    <input type="password" name="cpw" class="form-control" id="confirm-password" required value="<?php echo isset($_POST['cpw']) ? $_POST['cpw'] : ''; ?>">
                                     <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                <?php echo $errorIncorrectCPw; ?>
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                                <button type="submit" name="updatePw" class="btn btn-primary">Mettre à jour</button>
                             </div>
                         </div>
 

@@ -2,100 +2,84 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
+
 const env = 'dev';
 const RACINE = env === 'dev' ? '/bookingSale/' : '';
+
+function checkRoomAvailability(endDate, endHour, startDate, startHour) {
+    const now = new Date();
+    //console.log("endDate",endDate,"endHour",endHour,"startDate",startDate,"startHour",startHour);
+    // 1. Vérification des paramètres obligatoires
+    if (!endDate || !endHour || !startDate || !startHour) {
+        return false;
+    }
+
+    // 2. Création des objets Date avec les heures
+    const startD = new Date(startDate);
+    const endD = new Date(endDate);
+    
+    // Configuration des heures/minutes
+    const [startH, startM] = startHour.split(':').map(Number);
+    const [endH, endM] = endHour.split(':').map(Number);
+    
+    startD.setHours(startH, startM, 0, 0);
+    endD.setHours(endH, endM, 0, 0);
+
+    //console.log("startD",startD,"endD",endD);
+
+    // 3. Vérification que la date de début est au moins 1 jour dans le futur
+    const oneDayInMs = 24 * 60 * 60 * 1000; // 1 jour en millisecondes
+    const timeUntilStart = Math.abs(startD.getTime() - now.getTime());
+    console.log("startD",startD.getTime(),"now",now.getTime())
+    // 4. Vérification que la date de fin est après la date de début
+    if (endD <= startD) {
+        return false;
+    }else{
+        console.log("test")
+        if (startD.getTime() >= now.getTime()) {
+            if ((timeUntilStart / oneDayInMs) >= 1) {
+                // Moins de 24h avant le début de la réservation
+                return false;
+            }else{
+                console.log("test1","timeUntilStart",timeUntilStart,"oneDayInMs",oneDayInMs)
+                return true
+            }
+        } else {
+            if (endD.getTime() <= now.getTime()) {
+                return false;
+            } else {
+                return true
+            }
+        }
+    }
+}
 if(document.getElementById("bookingSale")){
     // Données des salles (simulées)
-    const roomsData = [
-        {
-            id: 1,
-            title: "Salle de Réunion Lumineuse",
-            description: "Salle spacieuse avec vue sur la ville, idéale pour les réunions d'équipe.",
-            image: "https://images.unsplash.com/photo-1568219656418-15c329312bf1?ixlib=rb-4.0.3",
-            city: "paris",
-            category: "reunion",
-            capacity: 12,
-            price: 120,
-            available: true
-        },
-        {
-            id: 2,
-            title: "Bureau Privé Moderne",
-            description: "Bureau calme et bien équipé pour le travail en solo ou à deux.",
-            image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-4.0.3",
-            city: "lyon",
-            category: "bureau",
-            capacity: 2,
-            price: 80,
-            available: true
-        },
-        {
-            id: 3,
-            title: "Espace Formation Professionnel",
-            description: "Grande salle équipée pour les sessions de formation avec tableau interactif.",
-            image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3",
-            city: "marseille",
-            category: "formation",
-            capacity: 25,
-            price: 250,
-            available: false
-        },
-        {
-            id: 4,
-            title: "Salle de Conférence Élégante",
-            description: "Salle prestigieuse pour les conférences et réunions importantes.",
-            image: "https://images.unsplash.com/photo-1571624436279-b272aff752b5?ixlib=rb-4.0.3",
-            city: "paris",
-            category: "reunion",
-            capacity: 30,
-            price: 350,
-            available: true
-        },
-        {
-            id: 5,
-            title: "Bureau Coworking",
-            description: "Espace de travail partagé avec accès à toutes les commodités.",
-            image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3",
-            city: "toulouse",
-            category: "bureau",
-            capacity: 1,
-            price: 50,
-            available: true
-        },
-        {
-            id: 6,
-            title: "Atelier Créatif",
-            description: "Espace lumineux pour les sessions de brainstorming et ateliers créatifs.",
-            image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-4.0.3",
-            city: "bordeaux",
-            category: "formation",
-            capacity: 15,
-            price: 180,
-            available: true
-        },
-        {
-            id: 7,
-            title: "Salle de Réunion Intime",
-            description: "Petite salle conviviale pour les réunions en petit comité.",
-            image: "https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3",
-            city: "lyon",
-            category: "reunion",
-            capacity: 6,
-            price: 90,
-            available: false
-        },
-        {
-            id: 8,
-            title: "Espace Formation Technologique",
-            description: "Salle équipée d'ordinateurs et de matériel high-tech pour les formations IT.",
-            image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3",
-            city: "paris",
-            category: "formation",
-            capacity: 20,
-            price: 300,
-            available: true
+    let roomsData = [];
+    const pagination = $("#pagination");
+    const url = new URL(window.location.href);
+    const pSize = url.search ? url.search.split("=")[1] : 1;
+    $.post(RACINE+'inc/controls.php',{"postType":"salleList",page:pSize},(res)=>{
+        if(res.resultat){
+            $("#pagination a").remove();
+            console.log(pSize,url);
+            const start = Math.max(1, pSize - 2);
+            const end = Math.min(res.totalPages, pSize + 2);
+            roomsData = res.resultat;
+            let link = '';
+            console.log("start",start, "end",end,res)
+            for (let i = start; i <= end; i++) {
+                link += `<a href="?page=${i}" ${i === parseInt(pSize) ? "class='active'" : ""}>${i}</a>`;
+            }
+            if (parseInt(pSize) < res.totalPages) {
+                link += `<a href="?page=${parseInt(pSize) + 1}" class="noRounded">Suivant</a>`;
+                link += `<a href="?page=${res.totalPages}" class="noRounded">Dernière &raquo;</a>`;
+            }
+            pagination.prepend(link);
+            displayRooms(res.resultat,pSize);
         }
-    ];
+        console.log(res)
+    },'json');
 
     // Initialisation des curseurs de plage
     document.addEventListener('DOMContentLoaded', function() {
@@ -136,7 +120,7 @@ if(document.getElementById("bookingSale")){
         });
 
         // Charger les salles initiales
-        displayRooms(roomsData);
+        //displayRooms(roomsData);
 
         // Gestion des filtres
         document.getElementById('applyFilters').addEventListener('click', applyFilters);
@@ -155,29 +139,26 @@ if(document.getElementById("bookingSale")){
         const capacityMax = parseInt(document.getElementById('capacityMax').value);
         const priceMin = parseInt(document.getElementById('priceMin').value);
         const priceMax = parseInt(document.getElementById('priceMax').value);
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
+        //const startDate = document.getElementById('startDate').value;
+        //const endDate = document.getElementById('endDate').value;
 
         const filteredRooms = roomsData.filter(room => {
             // Filtre par ville
-            if (city && room.city !== city) return false;
+            if (city && room.ville !== city) return false;
 
             // Filtre par catégorie
-            if (categories.length > 0 && !categories.includes(room.category)) return false;
+            if (categories.length > 0 && !categories.includes(room.categorie)) return false;
 
             // Filtre par capacité
-            if (room.capacity < capacityMin || room.capacity > capacityMax) return false;
+            if (room.capacite < capacityMin || room.capacite > capacityMax) return false;
 
             // Filtre par prix
-            if (room.price < priceMin || room.price > priceMax) return false;
-
-            // Les filtres de date seraient normalement vérifiés contre les réservations existantes
-            // Pour cette démo, nous ne les utilisons pas pour filtrer les salles
+            if (room.prix < priceMin || room.prix > priceMax) return false;
 
             return true;
         });
 
-        displayRooms(filteredRooms);
+        displayRooms(filteredRooms,pSize);
     }
 
     // Réinitialiser les filtres
@@ -198,11 +179,11 @@ if(document.getElementById("bookingSale")){
         document.getElementById('endDate').value = '';
 
         // Afficher toutes les salles
-        displayRooms(roomsData);
+        displayRooms(roomsData,pSize);
     }
 
     // Afficher les salles
-    function displayRooms(rooms) {
+    function displayRooms(rooms,pageSize) {
         const container = document.getElementById('rooms-container');
         container.innerHTML = '';
 
@@ -212,13 +193,14 @@ if(document.getElementById("bookingSale")){
         }
 
         rooms.forEach(room => {
-            const statusClass = room.available ? 'available' : 'booked';
-            const statusText = room.available ? 'Disponible' : 'Réservée';
-            const statusBadgeClass = room.available ? 'bg-success' : 'bg-danger';
+            console.log("checkRoomAvailability(room.date_debut)",checkRoomAvailability(room.date_fin,room.heure_fin,room.date_debut,room.heure_debut),room.titre)
+            const statusClass = checkRoomAvailability(room.date_fin,room.heure_fin,room.date_debut,room.heure_debut) ? 'booked' : 'available';
+            const statusText = checkRoomAvailability(room.date_fin,room.heure_fin,room.date_debut,room.heure_debut) ? 'Réservée' : 'Disponible';
+            const statusBadgeClass = checkRoomAvailability(room.date_fin,room.heure_fin,room.date_debut,room.heure_debut) ? 'bg-danger' : 'bg-success';
 
             // Traduire la catégorie
             let categoryText = '';
-            switch(room.category) {
+            switch(room.categorie) {
                 case 'bureau': categoryText = 'Bureau'; break;
                 case 'reunion': categoryText = 'Réunion'; break;
                 case 'formation': categoryText = 'Formation'; break;
@@ -226,7 +208,7 @@ if(document.getElementById("bookingSale")){
 
             // Traduire la ville
             let cityText = '';
-            switch(room.city) {
+            switch(room.ville) {
                 case 'paris': cityText = 'Paris'; break;
                 case 'lyon': cityText = 'Lyon'; break;
                 case 'marseille': cityText = 'Marseille'; break;
@@ -244,27 +226,37 @@ if(document.getElementById("bookingSale")){
             roomCard.innerHTML = `
                 <div class="card room-card ${statusClass} h-100">
                     <span class="badge ${statusBadgeClass} status-badge">${statusText}</span>
-                    <img src="${room.image}" class="card-img-top room-img" alt="${room.title}">
+                    <img src="${room.photo}" class="card-img-top room-img" alt="${room.titre}">
                     <div class="card-body">
-                        <h5 class="card-title">${room.title}</h5>
+                        <h5 class="card-title">${room.titre}</h5>
                         <p class="card-text">${room.description}</p>
                         <ul class="list-group list-group-flush mb-3">
                             <li class="list-group-item"><i class="fas fa-city"></i> ${cityText}</li>
                             <li class="list-group-item"><i class="fas fa-tag"></i> ${categoryText}</li>
-                            <li class="list-group-item"><i class="fas fa-users"></i> Capacité: ${room.capacity} personnes</li>
-                            <li class="list-group-item"><span class="price-highlight">${room.price}€</span> / jour</li>
+                            <li class="list-group-item"><i class="fas fa-users"></i> Capacité: ${room.capacite} personnes</li>
+                            <li class="list-group-item"><span class="price-highlight">${room.prix}€</span> / jour</li>
                         </ul>
                     </div>
                     <div class="card-footer bg-transparent">
-                        ${room.available 
-                            ? '<a href="'+RACINE+'booking" class="btn btn-primary w-100">Réserver</a>' 
-                            : '<button class="btn btn-outline-secondary w-100">Voir plus</button>'}
+                        ${!checkRoomAvailability(room.date_fin,room.heure_fin,room.date_debut,room.heure_debut)
+                            ? '<a href="'+RACINE+'booking?roomId='+room.id_salle+'" class="btn btn-primary w-100">Réserver</a>' 
+                            : '<a href="'+RACINE+'view-room?roomId='+room.id_salle+'" class="btn btn-outline-secondary w-100">Voir plus</a>'}
                     </div>
                 </div>
             `;
-
             container.appendChild(roomCard);
         });
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.id = "pageSize";
+        input.value = pageSize;
+        container.appendChild(input);
+        $("#pagination .start").remove();
+        $("#pagination .prev").remove();
+        if (pageSize && pageSize > 1) {
+            pagination.prepend('<a href="?page=1" class="noRounded start">&laquo; Première</a><a href="?page='+(pageSize - 1)+'" class="noRounded prev">Précédent</a>')
+            
+        }
     }
 }
 

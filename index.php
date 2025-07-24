@@ -1,51 +1,8 @@
 <?php
     require_once 'inc/init.php';
-    $produit_contenue = '';
-    $resultat_recherche = 'Nombre de resultat obtenu 0';
-    $row = 0;
+    $page = isset($_POST['page']) && is_numeric($_POST['page']) ? (int)$_POST['page'] : 1;
 
-    //debug($_POST);
-    if (isset($_POST) && !empty($_POST)) {
-        $resultat = executeRequete("SELECT s.titre,s.description,s.photo,p.date_arrivee,p.date_depart,p.id_produit,p.id_salle,p.prix,ROUND(AVG(a.note),1) AS note_moyenne FROM produit p LEFT JOIN salle s ON p.id_salle = s.id_salle LEFT JOIN avis a ON a.id_salle = p.id_salle WHERE s.categorie = :categorie AND s.ville = :ville AND s.capacite = :capacite AND p.prix <= :prix AND p.date_depart >= :date_arrivee AND p.date_arrivee > NOW() AND p.etat = :etat AND p.date_depart <= :date_depart GROUP BY p.id_produit",array(
-            ':categorie' => $_POST['categorie'],
-            ':ville' => $_POST['ville'],
-            ':capacite' => $_POST['capacite'],
-            ':prix' => $_POST['prix'],
-            ':date_arrivee' => $_POST['date_arrivee'],
-            ':etat' => 'libre',
-            ':date_depart' => $_POST['date_depart']
-        ));
-    } else {
-        $resultat = executeRequete("SELECT s.titre,s.description,s.photo,p.date_arrivee,p.date_depart,p.id_produit,p.id_salle,p.prix,ROUND(AVG(a.note),1) AS note_moyenne FROM produit p LEFT JOIN salle s ON p.id_salle = s.id_salle LEFT JOIN avis a ON a.id_salle = p.id_salle WHERE p.date_arrivee > NOW() AND p.etat = :etat GROUP BY p.id_produit",array(':etat' => 'libre'));
-    }
-
-    while ($produit = $resultat->fetch(PDO::FETCH_ASSOC)) {
-        //debug($produit);
-        if (!empty($produit['titre']) && !empty($produit['description']) && !empty($produit['photo']) && !empty($produit['date_arrivee']) && !empty($produit['date_depart']) && !empty($produit['id_produit']) && !empty($produit['id_salle']) && !empty($produit['prix'])) {
-            $produit_contenue .= '<div class="item">';
-                $produit_contenue .= '<div class="card">';
-                    $produit_contenue .= '<a href="fiche-produit.php?id_produit='.$produit['id_produit'].'"><img src="'.$produit['photo'].'" alt="'.$produit['titre'].'" class="card-img-top"></a>';
-                $produit_contenue .= '<div class="card-body">';
-                    $produit_contenue .= '<div class="body">';
-                        $produit_contenue .= '<h5>Salle '.$produit['titre'].'</h5>';
-                        $produit_contenue .= '<p>'.$produit['prix'].' €TTC</p>';
-                    $produit_contenue .= '</div>';
-                    $produit_contenue .= '<p>'.substr($produit['description'],0,35).'...</p>';
-                    $produit_contenue .= '<p>'.explode(" ",$produit['date_arrivee'])[0].' au '.explode(" ",$produit['date_depart'])[0].'</p>';
-                    $produit_contenue .= '<p>'.gestionNote(round($produit['note_moyenne'])).'</p>';
-                $produit_contenue .= '</div>';
-                $produit_contenue .= '</div>';
-            $produit_contenue .= '</div>';
-            $row++;
-        }else{
-            $row = 0;
-        }
-        
-    }
-    
-//inclusion du header
-
-require_once 'inc/header.php';
+    require_once 'inc/header.php';
 ?>
 <div class="position-relative mb-4 img">
     <img src="https://images.unsplash.com/photo-1556760544-74068565f05c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
@@ -129,7 +86,7 @@ require_once 'inc/header.php';
                     <input type="hidden" id="priceMax" value="500">
                 </div>
 
-                <div class="mb-3">
+                <!--<div class="mb-3">
                     <label for="startDate" class="form-label">Date de début</label>
                     <input type="date" class="form-control" id="startDate">
                 </div>
@@ -137,7 +94,7 @@ require_once 'inc/header.php';
                 <div class="mb-3">
                     <label for="endDate" class="form-label">Date de fin</label>
                     <input type="date" class="form-control" id="endDate">
-                </div>
+                </div>-->
 
                 <button id="applyFilters" class="btn btn-primary w-100">Appliquer les filtres</button>
                 <button id="resetFilters" class="btn btn-outline-secondary w-100 mt-2">Réinitialiser</button>
@@ -149,18 +106,12 @@ require_once 'inc/header.php';
             <div class="row" id="rooms-container">
                 <!-- Les salles seront chargées ici dynamiquement -->
             </div>
+            <!-- Pagination -->
+            <div id="pagination" class="pagination">
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    let range = document.querySelector('#myRange');
-    let output = document.querySelector('.prix p');
-    output.innerHTML = 'Valeur : '+range.value+ ' Maximum';
-    range.oninput = function(){
-        output.innerHTML = 'Valeur : '+range.value+ ' Maximum';
-    }
-</script>
 
 
 

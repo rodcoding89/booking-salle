@@ -30,8 +30,5 @@
     <p>Vous pouvez nous joindre directement par téléphone au +33 75 65 25 45</p>
 </div>
 
-
-
-
 <?php
     require_once dirname(__DIR__) . '/inc/footer.php';
