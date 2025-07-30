@@ -47,5 +47,6 @@
     <script src="<?php echo RACINE_SITE.'js/booking.js' ?>"></script>
     <script src="<?php echo RACINE_SITE.'js/sale-list.js' ?>"></script>
     <script src="<?php echo RACINE_SITE.'js/map.js' ?>"></script>
+    <script src="<?php echo RACINE_SITE.'js/profil.js' ?>"></script>
 </body>
 </html>

@@ -7,7 +7,10 @@ const env = 'dev';
 const RACINE = env === 'dev' ? '/bookingSale/' : '';
 
 function checkRoomAvailability(endDate, endHour, startDate, startHour) {
-    const now = new Date();
+    const nowStart = new Date();
+    nowStart.setHours(7,30,0,0);
+    const nowEnd = new Date();
+    nowEnd.setHours(19,30,0,0);
     //console.log("endDate",endDate,"endHour",endHour,"startDate",startDate,"startHour",startHour);
     // 1. Vérification des paramètres obligatoires
     if (!endDate || !endHour || !startDate || !startHour) {
@@ -29,13 +32,18 @@ function checkRoomAvailability(endDate, endHour, startDate, startHour) {
 
     // 3. Vérification que la date de début est au moins 1 jour dans le futur
     const oneDayInMs = 24 * 60 * 60 * 1000; // 1 jour en millisecondes
-    const timeUntilStart = Math.abs(startD.getTime() - now.getTime());
-    console.log("startD",startD.getTime(),"now",now.getTime())
+
+    const commandeStartWithBuffer = new Date(startD.getTime() - oneDayInMs);
+    const commandeEndWithBuffer = new Date(endD.getTime() + oneDayInMs);
+
+    //const timeUntilStart = Math.abs(startD.getTime() - now.getTime());
+    //console.log("startD",startD.getTime(),"now",now.getTime())
     // 4. Vérification que la date de fin est après la date de début
-    if (endD <= startD) {
+    /*if (endD <= startD) {
         return false;
     }else{
         console.log("test")
+        
         if (startD.getTime() >= now.getTime()) {
             if ((timeUntilStart / oneDayInMs) >= 1) {
                 // Moins de 24h avant le début de la réservation
@@ -51,7 +59,9 @@ function checkRoomAvailability(endDate, endHour, startDate, startHour) {
                 return true
             }
         }
-    }
+    }*/
+    const isOverlapping = nowStart <= commandeEndWithBuffer && nowEnd >= commandeStartWithBuffer;
+    return isOverlapping;
 }
 if(document.getElementById("bookingSale")){
     // Données des salles (simulées)
@@ -142,23 +152,38 @@ if(document.getElementById("bookingSale")){
         //const startDate = document.getElementById('startDate').value;
         //const endDate = document.getElementById('endDate').value;
 
-        const filteredRooms = roomsData.filter(room => {
-            // Filtre par ville
-            if (city && room.ville !== city) return false;
+        const filterValue = {
+            "postType":"salleListFilter",
+            "city":city,
+            "categorie":categories,
+            "capaciteMin": capacityMin,
+            "capaciteMax": capacityMax,
+            "prixMin":priceMin,
+            "prixMax":priceMax,
+            page:pSize
+        }
 
-            // Filtre par catégorie
-            if (categories.length > 0 && !categories.includes(room.categorie)) return false;
-
-            // Filtre par capacité
-            if (room.capacite < capacityMin || room.capacite > capacityMax) return false;
-
-            // Filtre par prix
-            if (room.prix < priceMin || room.prix > priceMax) return false;
-
-            return true;
-        });
-
-        displayRooms(filteredRooms,pSize);
+        $.post(RACINE+'inc/controls.php',filterValue,(res)=>{
+            if(res.resultat){
+                $("#pagination a").remove();
+                console.log(pSize,url);
+                const start = Math.max(1, pSize - 2);
+                const end = Math.min(res.totalPages, pSize + 2);
+                roomsData = res.resultat;
+                let link = '';
+                console.log("start",start, "end",end,res)
+                for (let i = start; i <= end; i++) {
+                    link += `<a href="?page=${i}" ${i === parseInt(pSize) ? "class='active'" : ""}>${i}</a>`;
+                }
+                if (parseInt(pSize) < res.totalPages) {
+                    link += `<a href="?page=${parseInt(pSize) + 1}" class="noRounded">Suivant</a>`;
+                    link += `<a href="?page=${res.totalPages}" class="noRounded">Dernière &raquo;</a>`;
+                }
+                pagination.prepend(link);
+                displayRooms(res.resultat,pSize);
+            }
+            console.log(res)
+        },'json');
     }
 
     // Réinitialiser les filtres
@@ -175,8 +200,30 @@ if(document.getElementById("bookingSale")){
         const priceSlider = document.getElementById('priceRange');
         priceSlider.noUiSlider.set([0, 500]);
 
-        document.getElementById('startDate').value = '';
-        document.getElementById('endDate').value = '';
+        /*document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';*/
+
+        $.post(RACINE+'inc/controls.php',{"postType":"salleList",page:pSize},(res)=>{
+            if(res.resultat){
+                $("#pagination a").remove();
+                console.log(pSize,url);
+                const start = Math.max(1, pSize - 2);
+                const end = Math.min(res.totalPages, pSize + 2);
+                roomsData = res.resultat;
+                let link = '';
+                console.log("start",start, "end",end,res)
+                for (let i = start; i <= end; i++) {
+                    link += `<a href="?page=${i}" ${i === parseInt(pSize) ? "class='active'" : ""}>${i}</a>`;
+                }
+                if (parseInt(pSize) < res.totalPages) {
+                    link += `<a href="?page=${parseInt(pSize) + 1}" class="noRounded">Suivant</a>`;
+                    link += `<a href="?page=${res.totalPages}" class="noRounded">Dernière &raquo;</a>`;
+                }
+                pagination.prepend(link);
+                displayRooms(res.resultat,pSize);
+            }
+            console.log(res)
+        },'json');
 
         // Afficher toutes les salles
         displayRooms(roomsData,pSize);
@@ -188,7 +235,7 @@ if(document.getElementById("bookingSale")){
         container.innerHTML = '';
 
         if (rooms.length === 0) {
-            container.innerHTML = '<div class="col-12 text-center py-5"><h4>Aucune salle ne correspond à vos critères de recherche</h4></div>';
+            container.innerHTML = '<div class="col-12 text-center py-5 noroom"><h4>Aucune salle ne correspond à vos critères de recherche</h4></div>';
             return;
         }
 
@@ -222,11 +269,18 @@ if(document.getElementById("bookingSale")){
             }
 
             const roomCard = document.createElement('div');
+            let link = room.photo.split("#");
+            let url = '';
+            if (link[1] && link[1] === 'img') {
+                url = RACINE + link[0];
+            } else {
+                url = link[0];
+            }
             roomCard.className = 'col-md-6 col-lg-4 pb-4';
             roomCard.innerHTML = `
                 <div class="card room-card ${statusClass} h-100">
                     <span class="badge ${statusBadgeClass} status-badge">${statusText}</span>
-                    <img src="${room.photo}" class="card-img-top room-img" alt="${room.titre}">
+                    <img src="${url}" class="card-img-top room-img" alt="${room.titre}">
                     <div class="card-body">
                         <h5 class="card-title">${room.titre}</h5>
                         <p class="card-text">${room.description}</p>

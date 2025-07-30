@@ -76,9 +76,10 @@
     $contenu .= '</table>';
 
 ?>
-<div class="" style="margin-top: 155px;">
-	<h4 class="mb-4">Nombre de client : <?php echo $nb_row; ?> </h4>
-    <div class="content-table">
+<div class="" style="margin-top: 100px;">
+	<h1 class="mb-4">Liste client</h1>
+    <div class="content-table mb-4">
+        <h4 class="mb-4">Nombre de client : <?php echo $nb_row; ?> </h4>
         <?php echo $contenu; ?>
     </div>
 </div>

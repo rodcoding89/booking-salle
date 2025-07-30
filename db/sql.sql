@@ -18,12 +18,13 @@ CREATE TABLE `salle` (
     `caracteristic` text NOT NULL,
     `categorie` ENUM('formation', 'bureau', 'reunion') NOT NULL,
     `rue` varchar(255) NOT NULL,
-    `date_debut` date NULL,
-    `date_fin` date NULL,
-    `heure_debut` CHAR(8) NULL,
-    `heure_fin` CHAR(8) NULL,
     PRIMARY KEY (`id_salle`)
 );
+
+CREATE TABLE `product` (
+    `id_product` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ``
+)
 
 
 CREATE TABLE `membre` (

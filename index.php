@@ -96,7 +96,7 @@
                     <input type="date" class="form-control" id="endDate">
                 </div>-->
 
-                <button id="applyFilters" class="btn btn-primary w-100">Appliquer les filtres</button>
+                <button id="applyFilters" class="btn btn-primary w-100">Appliquer</button>
                 <button id="resetFilters" class="btn btn-outline-secondary w-100 mt-2">Réinitialiser</button>
             </div>
         </div>

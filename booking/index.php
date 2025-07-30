@@ -18,24 +18,25 @@
     $defaultStartDateHour = 0;
     $nowDay = explode("-",date("Y-m-d"))[2];
     $startDay = explode("-",$startDate)[2];
-    echo $nowDay.' ';
-    echo $startDay. ' ';
+    
+    //echo $nowDay.' ';
+    //echo $startDay. ' ';
     if ($givinHour) {
         $left = (int)explode(':',$givinHour)[0];
         $right = explode(':',$givinHour)[1];
     }
     if ($type == "start") {
-        $realStart = $left + 1;
-        $realLimit = !empty($left) ? $startDay > $nowDay ? $realStart + 23 - $left - 4 : abs($left - 15) : $limit;
+        $realStart = 0;//$left + 1;
+        $realLimit = 26;//!empty($left) ? $startDay > $nowDay ? $realStart + 23 - $left - 4 : abs($left - 15) : $limit;
     } else {
-        $realStart = !empty($left)
+        $realStart = 17;/*!empty($left)
          ? (
             abs($nowDay - $startDay) > 1 || $left < 17
             ? $left + 2 
             : (17 - 3)
         )
-        : 17;
-        $realLimit = !empty($left)
+        : 17;*/
+        $realLimit = 14;/*!empty($left)
         ? (
             abs($nowDay - $startDay) > 1
                 ? $limit
@@ -45,14 +46,15 @@
                         : (17 - abs(17 - $left))
                 )
         )
-        : 14;
+        : 14;*/
 
     }
     
     $hour = (int)$realStart;
     //$currentHour = date("h");
-    echo "realStart ".$realStart ." ";
-    echo "realLimit ".$realLimit .", ";
+    //echo "realStart ".$realStart ." ";
+    //echo "realLimit ".$realLimit .", ";
+
     for ($i=0; $i < $realLimit; $i++) {
         //echo 'before '.$hour .' index='.$i.', ';
         if ($type == "start") {
@@ -68,7 +70,7 @@
             }
             
         } else {
-            if (!empty($givinHour)) {
+            /*if (!empty($givinHour)) {
             //echo 'test left'.$left;
                 if (abs($nowDay - $startDay) > 1 || $left < 17) {
                     //echo 'test1';
@@ -104,6 +106,13 @@
                     $options .= '<option value="'.$hour.':30'.'">'.$hour.':30'.'</option>';
                     $hour = $hour + 1; 
                 }
+            }*/
+            if ($i%2 == 0) {
+                $hour = $hour < 10 ? '0'.$hour : $hour;
+                $options .= '<option value="'.$hour.':00'.'">'.$hour.':00'.'</option>';
+            }else{
+                $options .= '<option value="'.$hour.':30'.'">'.$hour.':30'.'</option>';
+                $hour = $hour + 1; 
             }
             
         }
@@ -126,6 +135,14 @@
  $statusClass = checkRoomAvailability($data['date_fin'],$data['heure_fin'],$data['date_debut'],$data['heure_debut']) ? 'booked' : 'available';
  $statusText = checkRoomAvailability($data['date_fin'],$data['heure_fin'],$data['date_debut'],$data['heure_debut']) ? 'Réservée' : 'Disponible';
 $statusBadgeClass = checkRoomAvailability($data['date_fin'],$data['heure_fin'],$data['date_debut'],$data['heure_debut']) ? 'bg-danger' : 'bg-success';
+$link = explode("#", $data['photo']);
+$url = '';
+if (isset($link[1]) && $link[1] == 'img') {
+    $url = RACINE_SITE. $link[0];
+} else {
+    $url = $link[0];
+}
+
 ?>
 <div id="booking" class="booking-container">
     <div id="toasBooking" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -144,7 +161,7 @@ $statusBadgeClass = checkRoomAvailability($data['date_fin'],$data['heure_fin'],$
             </div>
 
             <div class="card room-card mb-4">
-                <img src="<?php echo $data['photo']; ?>" 
+                <img src="<?php echo $url; ?>" 
                      class="card-img-top roomBookingImg"
                      alt="Salle de réunion">
                 <div class="card-body">

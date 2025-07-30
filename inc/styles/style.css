@@ -208,6 +208,15 @@ body {
     padding: 0 10px;
     color: #6c757d;
 }
+.noroom{
+    height: 350px;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    background-color: #CCC;
+    margin-top: 30px;
+}
 @media (max-width: 768px) {
     .info-sidebar, .form-side {
         border-radius: 10px;
@@ -218,6 +227,22 @@ body {
     .form-side {
         border-radius: 0 0 10px 10px;
     }
+}
+/**************************BOOKING UPDATE***********************************/
+.form-container {
+    max-width: 800px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.date-time-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.date-time-group .form-group {
+    flex: 1;
+    min-width: 200px;
 }
 /**************************CONFIRMATION*************************************/
 .confirmation-container {

@@ -56,12 +56,6 @@
     </div>
     <div class="stat-content">
         <div class="note">
-            <h6>Le top 5 des salles les mieux notées</h6>
-            <ol class="list-group list-group-numbered">
-                <?php echo $contenu ?>
-            </ol>
-        </div>
-        <div class="note">
             <h6>Le top 5 des salles les plus commandées</h6>
             <ol class="list-group list-group-numbered">
                 <?php echo $contenu1 ?>

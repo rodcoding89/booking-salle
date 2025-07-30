@@ -17,12 +17,15 @@
 </head>
 <body>
     <div class="backoffice">
-        <ul class="nav nav-tabs d-flex justify-content-center">
-            <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin'; ?>">Gestion des membres</a></li>
-            <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/rooms'; ?>">Gestion des salles</a></li>
-            <!--<li><a class="nav-link" href="gestion-produits.php">Gestion des produits</a></li>-->
-            <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/orders'; ?>">Gestion des commandes</a></li>
-            <!--<li><a class="nav-link" href="gestion-avis.php">Gestion des avis</a></li>-->
-            <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/statistic'; ?>">Statistique</a></li>
-        </ul>
+        <header>
+            <a class="navbar-brand d-lg-block" href="<?php echo RACINE_SITE ?>">Stwich</a>
+            <ul class="header nav nav-tabs d-flex justify-content-center">
+                <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin'; ?>">Gestion des membres</a></li>
+                <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/rooms'; ?>">Gestion des salles</a></li>
+                <!--<li><a class="nav-link" href="gestion-produits.php">Gestion des produits</a></li>-->
+                <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/orders'; ?>">Gestion des commandes</a></li>
+                <!--<li><a class="nav-link" href="gestion-avis.php">Gestion des avis</a></li>-->
+                <li><a class="nav-link" href="<?php echo RACINE_SITE.'admin/statistic'; ?>">Statistique</a></li>
+            </ul>
+        </header>
     

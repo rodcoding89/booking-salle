@@ -5,13 +5,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
  */
 
-    require_once dirname(dirname(__DIR__)) . '/inc/init.php';
+    require_once dirname(dirname(dirname(__DIR__))) . '../inc/init.php';
 
     if (!estConnecte()) {
         header('location:'. RACINE_SITE.'sign-in');
     }
 
-    require_once dirname(dirname(__DIR__)) . '/inc/header.php';
+    require_once dirname(dirname(dirname(__DIR__))) . '../inc/header.php';
     function create_date($dateString) {
         return new DateTime($dateString);
     }
@@ -25,6 +25,13 @@
 
     $dateFin=date_create($data['date_fin']);
     $dateFinFormated = date_format($dateFin,"j F, Y");
+    $link = explode("#", $data['photo']);
+    $url = '';
+    if (isset($link[1]) && $link[1] == 'img') {
+        $url = RACINE_SITE. $link[0];
+    } else {
+        $url = $link[0];
+    }
 ?>
 
 <div class="detail-container">
@@ -84,7 +91,7 @@
 
             <div class="row mb-4">
                 <div class="w-100 d-flex justify-content-center mb-3">
-                    <img class="booking-detail-img" src="<?php echo $data['photo']; ?>" alt="Salle de réunion">
+                    <img class="booking-detail-img" src="<?php echo $url; ?>" alt="Salle de réunion">
                 </div>
 
                 <div class="col-md-12">
@@ -169,7 +176,7 @@
                                 <?php 
                                     if ($data['commande_statut'] == 'pending') {
                                         ?>
-                                        <a href="<?php echo RACINE_SITE . 'update-order?orderId='.$data['id_commande']; ?>" class="btn btn-outline-primary">
+                                        <a href="<?php echo RACINE_SITE . '/profil/booking/update-order?orderId='.$data['id_commande']; ?>" class="btn btn-outline-primary">
                                             <i class="fas fa-edit me-1"></i> Modifier la réservation
                                         </a>
                                         <?php
@@ -197,4 +204,4 @@
 </div>
 
 <?php 
-require_once dirname(dirname(__DIR__)) . '/inc/footer.php';
+require_once dirname(dirname(dirname(__DIR__))) . '../inc/footer.php';

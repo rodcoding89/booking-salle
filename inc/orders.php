@@ -11,9 +11,11 @@
 			$option .= "Option - Stationnement privé(+".$_POST['parking-value']."€), ";
 		}
 
-		if($_POST['option-materiel']){
+		if(isset($_POST['option-materiel'])){
 			$option .= "Option - Matériel audiovisuel supplémentaire(+".$_POST['materiel-value']."€), ";
 		}
+
+		debuging($_POST);
 
 		//echo $option;
 

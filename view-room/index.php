@@ -18,7 +18,13 @@
 
     $dateFin=date_create($data['date_fin']);
     $dateFinFormated = date_format($dateFin,"j F, Y");
-
+    $link = explode("#", $data['photo']);
+    $url = '';
+    if (isset($link[1]) && $link[1] == 'img') {
+        $url = RACINE_SITE. $link[0];
+    } else {
+        $url = $link[0];
+    }
 ?>
 
 <div class="detail-container">
@@ -43,7 +49,7 @@
             
             <div class="row mb-4">
                 <div class="col-lg-6 col-md-12 mb-4">
-                    <img src="<?php echo $data['photo']; ?>" alt="<?php echo $data['titre']; ?>" class="roomImg">
+                    <img src="<?php echo $url; ?>" alt="<?php echo $data['titre']; ?>" class="roomImg">
                     <div class="d-flex justify-content-center align-items-center w-100 my-4">
                         <div class="d-flex flex-wrap justify-content-center align-items-center gap-2" style="max-width: 400px;">
                             <div id="printUnAvailableRoom" class="btn btn-outline-info"><i class="fas fa-print me-1"></i>Imprimer</div>

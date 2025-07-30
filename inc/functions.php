@@ -64,6 +64,12 @@ function caracteristic($item){
             //var_dump($value);
         }
     }
+    /*$select = '<select name="services" id="services">';
+    foreach($content as $icon => $label){
+        $select .= '<option value="' . htmlspecialchars($label) . '">' . htmlspecialchars($label) . '</option>';
+    }
+    $select .= '</select>';
+    echo $select;*/
     return $span;
 }
 
@@ -131,12 +137,35 @@ function checkRoomAvailability($endDate, $endHour, $startDate, $startHour) {
     }
 }
 
+//var_dump($listCaracteristic);
+function findItem($caracteristic,$item=''){
+    return array_search(trim($item), $caracteristic) !== false;
+}
+
+function genereOption($listCaracteristic,$selectedItem){
+    //var_dump($selectedItem[0]);
+    //var_dump($selectedItem);
+    $checkbox = '<div style="height:150px;width100%;border:1px solid #ccc;border-radius:8px;overflow:auto;padding: 10px 20px 10px;">';
+    foreach ($listCaracteristic as $key => $value) {
+        $checkbox .= '<div class="d-flex justify-content-start align-items-center gap-2">';
+        $checkbox .= '<input type="checkbox" name="caracteristic[]" value="' . $value . '" id="' . $value . '" ' . (findItem($selectedItem, $value) ? 'checked' : '') . '>';
+        $checkbox .= '<label for="' . $value . '">' . $value . '</label>';
+        $checkbox .= '</div>';
+    }
+    $checkbox .= '</div>';
+    //echo " checkbox ". $checkbox;
+    return $checkbox;
+}
 
 // gestion des requêtes sql
 
 function executeRequete($requete,$marqueurs = array()){
     foreach ($marqueurs as $key => $value) {
-        $marqueurs[$key] = htmlspecialchars($value,ENT_QUOTES);
+        if (is_array($value) || is_numeric($value)) {
+            $marqueurs[$key] = $value;
+        } else {
+            $marqueurs[$key] = htmlspecialchars($value,ENT_QUOTES);
+        }
     }
     global $pdo;
     $resultat = $pdo->prepare($requete);
@@ -148,15 +177,19 @@ function executeRequete($requete,$marqueurs = array()){
     }
 }
 
-function selectQuery($query,$marqueur = array()){
-    foreach ($marqueur as $key => $value) {
-        $marqueur[$key] = htmlspecialchars($value,ENT_QUOTES);
+function selectQuery($query,$marqueurs = array()){
+    foreach ($marqueurs as $key => $value) {
+        if (is_array($value) || is_numeric($value)) {
+            $marqueurs[$key] = $value;
+        } else {
+            $marqueurs[$key] = htmlspecialchars($value,ENT_QUOTES);
+        }
     }
-
+    //var_dump($marqueurs);
     global $pdo;
 
     $resultat = $pdo->prepare($query);
-    $success = $resultat->execute($marqueur);
+    $success = $resultat->execute($marqueurs);
     if ($success) {
         return $resultat;
     }else {
