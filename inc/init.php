@@ -26,7 +26,9 @@ try {
 session_start();
 
 // définition du chemin racine
-
+putenv("node=dev");
+//putenv("node=prod");
 define('RACINE_SITE','/bookingSale/');
-
+define('NODE_ENV','dev');
+//define('NODE_ENV','prod');
 require_once 'functions.php';

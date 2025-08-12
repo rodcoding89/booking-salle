@@ -1,3 +1,6 @@
+<?php 
+    require_once 'init.php';
+?>
     </main>
     <footer id="contact">
         <div class="container">
@@ -34,6 +37,10 @@
         </div>
     </footer>
     <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script>
+        const RACINE = "<?php echo RACINE_SITE; ?>";
+        const  node_env = "<?php echo NODE_ENV; ?>";
+    </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>

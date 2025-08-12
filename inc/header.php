@@ -14,14 +14,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
-    <style>
-        
-    </style>
+    <link rel="icon" type="image/png" href="<?php echo RACINE_SITE . 'images/favicon-96x96.png' ?>" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="<?php echo RACINE_SITE . 'images/favicon.svg' ?>" />
+    <link rel="shortcut icon" href="<?php echo RACINE_SITE . 'images/favicon.ico' ?>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo RACINE_SITE . 'images/apple-touch-icon.png' ?>" />
+    <link rel="manifest" href="<?php echo RACINE_SITE . 'images/site.webmanifest' ?>" />
+    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand d-lg-block" href="<?php echo RACINE_SITE ?>">Stwich</a>
+            <a class="navbar-brand d-lg-block" href="<?php echo RACINE_SITE ?>"><img style="width:70px; aspect-ratio: 1/1; border-radius: 50%;margin-right: 10px;" src="<?php echo RACINE_SITE. 'images/logo.jpg' ?>" alt="logo">Stwich</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>

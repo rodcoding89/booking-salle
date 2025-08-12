@@ -1,5 +1,5 @@
 if (document.getElementById("aside")) {
-    const node_env = "dev";
+    //const node_env = "dev";
     const href = window.location;
     const url = new URL(href);
     const pathname = url.pathname;

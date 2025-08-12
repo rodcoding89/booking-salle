@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
 
-const env = 'dev';
-const RACINE = env === 'dev' ? '/bookingSale/' : '';
 
 function checkRoomAvailability(endDate, endHour, startDate, startHour) {
     const nowStart = new Date();

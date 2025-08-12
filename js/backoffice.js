@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
-const node_env = "dev";
+//const node_env = "dev";
 const href = window.location;
 const url = new URL(href);
 const pathname = url.pathname;
