@@ -1,5 +1,6 @@
 <?php 
 	require_once dirname(__DIR__).'/inc/init.php';
+    $title = "Liste Client - Stwich";
 	require_once 'nav.php';
 	//traitement du formulaire
     if (isset($_POST) && !empty($_POST)) {

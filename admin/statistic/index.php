@@ -1,5 +1,6 @@
 <?php 
 	require_once dirname(dirname(__DIR__)).'/inc/init.php';
+    $title = "Statistique - Stwich";
 	require_once '../nav.php';
 
 	$message = '';

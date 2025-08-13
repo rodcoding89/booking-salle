@@ -1,5 +1,6 @@
 <?php 
 	require_once dirname(dirname(__DIR__)).'/inc/init.php';
+    $title = "Liste de Commande - Stwich";
 	require_once '../nav.php';
 	$message = '';
 
@@ -20,7 +21,7 @@
 
     function initStatus ($status,$from,$orderId){
         $statusText = '';
-        $spanStyle = 'font-size:11px; padding:5px 10px; border-radius:.5rem; color:white;display:block;width:max-content;'.($from != 'status' ? 'cursor:pointer;':';');
+        $spanStyle = 'font-size:11px; padding:5px 10px; border-radius:.5rem; color:white;display:block;width:max-content; pointer-events: none;opacity: .5;'.($from != 'status' ? 'cursor:pointer;':';');
 
         if ($status == 'pending') {
         	$statusText = $from == 'status' ? '<span style="' . $spanStyle . 'background-color:yellowgreen;">En attente</span>' : '<form action="'.RACINE_SITE.'inc/make_as_pending.php" method="POST"><input type="hidden" value="'.$orderId.'" name="orderId"> <button style="'.$spanStyle.'background-color:yellowgreen;border:none;" type="submit">Mettre en attente</button></form>';

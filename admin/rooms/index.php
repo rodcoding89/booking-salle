@@ -1,5 +1,6 @@
 <?php 
 	require_once dirname(dirname(__DIR__)).'/inc/init.php';
+    $title = "Gestion Salle - Stwich";
 	require_once '../nav.php';
     $message = '';
     //traitement de la suppression ou de la modification des salles
@@ -45,7 +46,7 @@
                 }
                 $contenu .= '<td>';
                     $contenu .= '<div style="display:flex;align-items:center;justify-content:flex-start;gap:5px;"><a href="'.RACINE_SITE.'admin/rooms/edit?id_salle='.$salle['id_salle'].'" title="Modifier la salle"> <i class="fa fa-edit"></i> </a><br>';
-                    $contenu .= '<a href="?id_salle='.$salle['id_salle'].'&action=delete" onclick="return confirm(\'Êtes vous certains de vouloir supprimer cette salle?\')" title="Supprimer la salle"><i class="fa fa-trash"></i></a></div>';
+                    $contenu .= '<a style="pointer-events: none;opacity: .5;" href="?id_salle='.$salle['id_salle'].'&action=delete" onclick="return confirm(\'Êtes vous certains de vouloir supprimer cette salle?\')" title="Supprimer la salle"><i class="fa fa-trash"></i></a></div>';
                 $contenu .= '</td>';
                 $contenu .= '</tr>';
             }

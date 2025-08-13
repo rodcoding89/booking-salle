@@ -1,5 +1,6 @@
 <?php
 	require_once dirname(dirname(dirname(__DIR__))).'/inc/init.php';
+	$title = "Ajouter une Salle - Stwich";
 	require_once '../../nav.php';
 	$message = '';
 	$listCaracteristic = [
@@ -194,7 +195,8 @@
 	            </div>
         	</div>
         </div>
-		<button type="submit" class="btn btn-primary w-100 mt-3">Enregistrer</button>
+        <span style="font-style:italic;font-size:12px;">Button désactivé pour les tests</span>
+		<button style="pointer-events: none;opacity: .5;" type="submit" class="btn btn-primary w-100 mt-3">Enregistrer</button>
     </form>
 </div>
 
